@@ -1,12 +1,11 @@
 use serenity::prelude::*;
 use serenity::model::channel::Message;
 
-// The notify_add function is used to add
-// a word for the message author that only notifies
+// The notify_set function is used to set
+// the word for the message author that notifies
 // them when a word in the current server is sent in
-// a message unlike the notify_add() function where
-// the word can be sent in any message in any guild.
-pub async fn notify_add(word: &str, ctx: &Context, msg: &Message) {
+// a message.
+pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
 
     // Send a response back to the message author
     msg.channel_id.send_message(
@@ -45,13 +44,10 @@ pub async fn notify_delete(word: &str, ctx: &Context, msg: &Message) {
     ).await.unwrap();
 }
 
-// The notify_list function is used to send a message
-// in the current channel with all the words from the
-// authors notification pool.
-pub async fn notify_list(ctx: &Context, msg: &Message, words: [&str; 1]) {
-
-    // Convert the words array to a string
-    let words: &str = "";
+// The notify_show function is used to send a message
+// in the current channel with the current word
+// that is being used for notifications.
+pub async fn notify_show(ctx: &Context, msg: &Message, word: &str) {
 
     // Send a response back to the message author
     msg.channel_id.send_message(
@@ -60,7 +56,8 @@ pub async fn notify_list(ctx: &Context, msg: &Message, words: [&str; 1]) {
             m.embed(|e| {e
                 .title("Notifications")
                 .description(
-                    format!("{}'s notification pool\n{}", msg.author.mention(), words
+                    format!("{}'s current notify is: {}", 
+                        msg.author.mention(), word
                 ))
                 .timestamp(serenity::model::Timestamp::now())
                 .color(3759815)
@@ -74,11 +71,10 @@ pub async fn notify_list(ctx: &Context, msg: &Message, words: [&str; 1]) {
 // =notify prefix commands
 pub async fn notify_help(ctx: &Context, msg: &Message) {
     let description: &str = "
-    `=notify add (word)`
-    `=notify gadd (word)`
-    `=notify gdel (word)`
+    `=notify set (word)`
     `=notify del (word)`
-    `=notify list`
+    `=notify show`
+    `=notify help`
     ";
 
     // Send a reply to the command author

@@ -10,10 +10,6 @@ mod commands;
 #[path = "./cogs/handlers.rs"]
 mod handlers;
 
-// Import sqlite database
-#[path = "./database/sqlite.rs"]
-mod database;
-
 #[tokio::main]
 async fn main() {
     // Initialize the command prefix and all 
