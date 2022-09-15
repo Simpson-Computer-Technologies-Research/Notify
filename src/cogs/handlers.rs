@@ -10,6 +10,37 @@ pub struct Handler {
     pub database: sqlx::SqlitePool
 }
 
+// The check_message_contents function is used
+// to iterate over each user in the database
+// and check whether the message contains the word
+// that said user has requested to be notified for.
+async fn check_message_contents(
+    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, 
+    msg: &serenity::model::channel::Message
+) {
+    // iterate over all the users in the database
+    // where guild_id = provided guild_id
+    let r = sqlx::query!(
+        "SELECT user_id, word FROM notify WHERE guild_id=?",
+        guild_id,
+    )
+
+    // Execute said sqlx query
+    .fetch_all(database)
+    .await
+    .unwrap();
+
+    // For each row in the database
+    for _i in r {
+        let user_id: &i64 = &_i.user_id;
+
+        // If the message contains the word
+        if msg.content.contains(&_i.word) {
+            println!("{}", user_id);
+        }
+    }
+}
+
 // SQLite Database implementation as documented
 // by the official serenity github example located here:
 // https://github.com/serenity-rs/serenity/tree/current/examples/e16_sqlite_database
@@ -27,6 +58,11 @@ impl EventHandler for Handler {
         // Define a new user_id variable
         let user_id: i64 = msg.author.id.0 as i64;
 
+        // Check whether the message contains a word that
+        // any user in the database+guild_id has requested
+        // to be notified for
+        check_message_contents(&self.database, &guild_id, &msg).await;
+
         // Add a word to the message authors notification pool
         // for the specific guild.
         if let Some(word) = msg.content.strip_prefix("=notify set") {
@@ -36,7 +72,7 @@ impl EventHandler for Handler {
             // whether the message contains the word.
 
             // Update the database
-            db_notify::set(&self.database, guild_id, user_id, word).await;
+            db_notify::set(&self.database, &guild_id, &user_id, word).await;
 
             // Send the success embed
             embeds::notify_set(word.trim(), &ctx, &msg).await;
@@ -48,7 +84,7 @@ impl EventHandler for Handler {
 
             // Get the word from the database
             let word: String = db_notify::select(
-                &self.database, guild_id, user_id).await;
+                &self.database, &guild_id, &user_id).await;
 
             // Send the embed that shows the users current word
             embeds::notify_show(&ctx, &msg, &word).await;
@@ -59,7 +95,7 @@ impl EventHandler for Handler {
         } else if let Some(word) = msg.content.strip_prefix("=notify del") {
 
             // Delete the word from the database
-            db_notify::delete(&self.database, guild_id, user_id).await;
+            db_notify::delete(&self.database, &guild_id, &user_id).await;
 
             // Send the success embed
             embeds::notify_delete(word.trim(), &ctx, &msg).await;

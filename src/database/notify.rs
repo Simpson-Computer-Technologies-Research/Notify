@@ -1,5 +1,4 @@
 
-
 // The exists function is used to
 // determine whether the user_id+guild_id
 // already exist within a row in the database.
@@ -7,7 +6,7 @@
 // This function is used to determine whether to
 // update or insert into the database
 async fn _exists(
-    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: i64, user_id: i64
+    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, user_id: &i64
 ) -> bool {
     // Get the word and check whether it's length is valid
     let word: String = select(database, guild_id, user_id).await;
@@ -20,7 +19,7 @@ async fn _exists(
 // much easier for iterating over each of the users
 // whenever a message is sent in the discord server.
 async fn _update(
-    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: i64, user_id: i64, word: &str
+    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, user_id: &i64, word: &str
 ) {
     // Establish new sqlx query
     sqlx::query!(
@@ -41,7 +40,7 @@ async fn _update(
 // word that said user wishes to be notified once sent
 // in a discord message.
 async fn _insert(
-    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: i64, user_id: i64, word: &str
+    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, user_id: &i64, word: &str
 ) {
     // Establish new sqlx query
     sqlx::query!(
@@ -57,6 +56,30 @@ async fn _insert(
     .unwrap();
 }
 
+// The select_from_guild function is used to obtain all the
+// words from the database using the provided guild+user_id
+/*
+pub async fn select_from_guild(
+    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64
+) -> Vec<Record> {
+    // Establish new sqlx query
+    let r: Vec<Record> = sqlx::query!(
+        "SELECT user_id, word FROM notify WHERE guild_id=?",
+        guild_id,
+    )
+
+    // Execute said sqlx query
+    .fetch_all(database)
+    .await
+    .unwrap();
+
+    // Iterate over the result
+    // and do i.word.unwrap();
+    // and do i.user_id.unwrap();
+    return r;
+}
+*/
+
 // The select function is used to select the word
 // from the database using the provided guild+user_id
 //
@@ -64,7 +87,7 @@ async fn _insert(
 // for determining whether the selected word's length
 // is greater than 0 (aka valid)
 pub async fn select(
-    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: i64, user_id: i64
+    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, user_id: &i64
 ) -> String {
 
     // Establish new sqlx query
@@ -89,7 +112,7 @@ pub async fn select(
 // This function is necessary for any user that
 // doesn't want to be pinged for any word.
 pub async fn delete(
-    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: i64, user_id: i64
+    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, user_id: &i64
 ) {
     // Establish new sqlx query
     sqlx::query!(
@@ -113,7 +136,7 @@ pub async fn delete(
 // exist, the word is inserted along with said
 // user_id + guild_id
 pub async fn set(
-    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: i64, user_id: i64, word: &str
+    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, user_id: &i64, word: &str
 ) {
     // Check whether the user_id and guild_id exist
     // in the database already.
