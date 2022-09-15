@@ -1,5 +1,5 @@
 [package]
-name = "discord_bot"
+name = "notify"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,5 +7,5 @@ edition = "2021"
 
 [dependencies]
 serenity = "0.11"
-# sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "sqlite", "offline"] }
+sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "sqlite", "offline"] }
 tokio = { version = "1.21.1", features = ["macros", "rt-multi-thread", "time"] }

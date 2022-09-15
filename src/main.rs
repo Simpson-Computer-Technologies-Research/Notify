@@ -1,5 +1,4 @@
 use std::env;
-use serenity::async_trait;
 use serenity::framework::StandardFramework;
 use serenity::prelude::*;
 
@@ -7,13 +6,13 @@ use serenity::prelude::*;
 #[path = "./cogs/commands.rs"]
 mod commands;
 
-// Initialize the client handler
-struct Handler;
-// {database: sqlx::SqlitePool,}
+// Import handlers
+#[path = "./cogs/handlers.rs"]
+mod handlers;
 
-// Define the event handler implement
-#[async_trait]
-impl EventHandler for Handler {}
+// Import sqlite database
+#[path = "./database/sqlite.rs"]
+mod database;
 
 #[tokio::main]
 async fn main() {
@@ -24,13 +23,9 @@ async fn main() {
         .group(&commands::GENERAL_GROUP);
 
     // Initialize the client handler object
-    let handler = Handler;
-
-    /*
-        {
+    let handler = handlers::Handler{
         
         // Initialize a connection to the sqlite database
-        
         database: sqlx::sqlite::SqlitePoolOptions::new()
             .max_connections(5)
             .connect_with(
@@ -40,8 +35,8 @@ async fn main() {
             )
             .await
             .expect("Couldn't connect to database")
-        };
-    */
+    };
+    
 
     // Get the token from the .env file
     let token: String = env::var("TOKEN").expect("$TOKEN is not set");
