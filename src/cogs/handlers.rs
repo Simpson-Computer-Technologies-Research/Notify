@@ -32,7 +32,7 @@ async fn check_message_contents(
         if msg.content.contains(&_i.word) {
             // Create a new private message with the
             // grabbed user id
-            let dm = UserId(&_i.user_id as u64).create_dm_channel(&ctx.http).await;
+            let dm = UserId(_i.user_id as u64).create_dm_channel(&ctx.http).await;
             
             // Send the alert embed
             embeds::notify_alert(ctx, &dm.unwrap(), &msg, &_i.word).await;

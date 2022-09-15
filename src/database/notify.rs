@@ -93,10 +93,14 @@ pub async fn select(
         guild_id,
         user_id,
     ).fetch_one(database).await;
-    if r.err().is_none() {
+
+    // Return the word if no errors
+    // have occured
+    if r.as_ref().err().is_none() {
         return r.unwrap().word;
     }
-    return "".to_string();
+    // Return None
+    return "~None".to_string();
 }
 
 // The delete function is used to delete the row
