@@ -51,7 +51,7 @@ pub async fn notify_show(ctx: &Context, msg: &Message, word: &str) {
             m.embed(|e| {e
                 .title("Notifications")
                 .description(
-                    format!("{}'s current notify is: {}", 
+                    format!("{}'s current notifier is: `{}`", 
                         msg.author.mention(), word
                 ))
                 .timestamp(serenity::model::Timestamp::now())
@@ -82,6 +82,31 @@ pub async fn notify_help(ctx: &Context, msg: &Message) {
                     .description(description)
                     .timestamp(serenity::model::Timestamp::now())
                     .color(3759815)
+            })}
+    ).await.unwrap();
+}
+
+// The notify_alert function is used to send a direct message
+// to the user as a notification for their notify word
+// appearing in a message within the guild.
+pub async fn notify_alert(
+    ctx: &Context, 
+    dm: &serenity::model::prelude::PrivateChannel,
+    msg: &Message,
+    word: &str
+) {
+    dm.send_message(
+        &ctx, 
+        |m| {
+            m.embed(|e| {e
+                .title("Notifications")
+                .description(
+                    format!("{} sent `{}` in <#{}>", 
+                        msg.author.mention(), word, msg.channel_id
+                ))
+                .timestamp(serenity::model::Timestamp::now())
+                .color(3759815)
+                
             })}
     ).await.unwrap();
 }

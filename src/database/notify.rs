@@ -8,9 +8,20 @@
 async fn _exists(
     database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, user_id: &i64
 ) -> bool {
+
+    // Establish new sqlx query
+    let r = sqlx::query!(
+        "SELECT word FROM notify WHERE guild_id=? AND user_id=?",
+        guild_id,
+        user_id,
+    )
+
+    // Execute said sqlx query
+    .fetch_one(database)
+    .await;
+
     // Get the word and check whether it's length is valid
-    let word: String = select(database, guild_id, user_id).await;
-    return word.len() > 0;
+    return r.err().is_none();
 }
 
 // The notify_set_update function is used to update
@@ -30,7 +41,7 @@ async fn _update(
     )
 
     // Execute said sqlx query
-    .fetch_one(database)
+    .execute(database)
     .await
     .unwrap();
 }
@@ -91,7 +102,7 @@ pub async fn select(
 ) -> String {
 
     // Establish new sqlx query
-    let e = sqlx::query!(
+    let r = sqlx::query!(
         "SELECT word FROM notify WHERE guild_id=? AND user_id=?",
         guild_id,
         user_id,
@@ -103,7 +114,7 @@ pub async fn select(
     .unwrap();
 
     // Return the selection
-    return e.word;
+    return r.word;
 }
 
 // The delete function is used to delete the row
@@ -122,7 +133,7 @@ pub async fn delete(
     )
 
     // Execute said sqlx query
-    .fetch_one(database)
+    .execute(database)
     .await
     .unwrap();
 }
@@ -140,6 +151,7 @@ pub async fn set(
 ) {
     // Check whether the user_id and guild_id exist
     // in the database already.
+    println!("{}", _exists(database, guild_id, user_id).await);
     if _exists(database, guild_id, user_id).await {
 
         // If so, update the user_id+guild_id row with the new word

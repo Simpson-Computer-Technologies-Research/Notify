@@ -39,7 +39,10 @@ async fn main() {
     let token: String = env::var("TOKEN").expect("$TOKEN is not set");
     
     // Initialize the intents required for the discord bot
-    let intents: GatewayIntents = GatewayIntents::non_privileged() | GatewayIntents::MESSAGE_CONTENT;
+    let intents: GatewayIntents = GatewayIntents::non_privileged() 
+        | GatewayIntents::GUILD_MESSAGES
+        | GatewayIntents::DIRECT_MESSAGES
+        | GatewayIntents::MESSAGE_CONTENT;
     
     // Build the discord client
     let mut client = Client::builder(token, intents)
