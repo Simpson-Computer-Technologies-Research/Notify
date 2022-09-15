@@ -1,6 +1,10 @@
 use serenity::prelude::*;
 mod embeds;
 
+// Import the notify database functions
+#[path = "../database/notify.rs"]
+mod db_notify;
+
 // Initialize the client handler
 pub struct Handler {
     pub database: sqlx::SqlitePool
@@ -23,24 +27,16 @@ impl EventHandler for Handler {
         // Define a new user_id variable
         let user_id: i64 = msg.author.id.0 as i64;
 
-
         // Add a word to the message authors notification pool
         // for the specific guild.
         if let Some(word) = msg.content.strip_prefix("=notify set") {
-
-
             // if the user already has a word set, replace it with the new
             // one. The user can only have one word so the bot can quickly
             // iterate over all the values in the database and check to see
             // whether the message contains the word.
-            
-            // Insert the value into the database
-            sqlx::query!(
-                "INSERT INTO notify (guild_id, user_id, word) VALUES (?, ?, ?)",
-                guild_id,
-                user_id,
-                word,
-            ).execute(&self.database).await.unwrap();
+
+            // Update the database
+            db_notify::set(&self.database, guild_id, user_id, word).await;
 
             // Send the success embed
             embeds::notify_set(word.trim(), &ctx, &msg).await;
@@ -50,32 +46,20 @@ impl EventHandler for Handler {
         // all of the message authors notification words
         } else if let Some(_) = msg.content.strip_prefix("=notify show") {
 
-            /*  Get the word from the database
-            let word = sqlx::query!(
-                "SELECT word FROM notify WHERE guild_id=? AND user_id=?",
-                guild_id,
-                user_id,
-            ).fetch_one(&self.database).await.unwrap();
-
-            // Convert the word into a string
-            let word: String = format!("{:?}", word);
-            println!("{}", word); // (for testing)
-
-            */
-
-            // or just use the cache to get the word
-            // eg:
-            // let word: &str = cache::get(guild_id, user_id);
-            let word: &str = "";
-
+            // Get the word from the database
+            let word: String = db_notify::select(
+                &self.database, guild_id, user_id).await;
 
             // Send the embed that shows the users current word
-            embeds::notify_show(&ctx, &msg, word).await;
+            embeds::notify_show(&ctx, &msg, &word).await;
 
 
-        // Remove a word from the message authors guild 
-        // notification word pool.
+        // Remove a word from the authors notification
+        // database.
         } else if let Some(word) = msg.content.strip_prefix("=notify del") {
+
+            // Delete the word from the database
+            db_notify::delete(&self.database, guild_id, user_id).await;
 
             // Send the success embed
             embeds::notify_delete(word.trim(), &ctx, &msg).await;

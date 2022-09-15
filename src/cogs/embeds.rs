@@ -6,8 +6,6 @@ use serenity::model::channel::Message;
 // them when a word in the current server is sent in
 // a message.
 pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
-
-    // Send a response back to the message author
     msg.channel_id.send_message(
         &ctx, 
         |m| {
@@ -27,7 +25,6 @@ pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
 // The notify_delete function is used to remove
 // a word from the sqlite database.
 pub async fn notify_delete(word: &str, ctx: &Context, msg: &Message) {
-    // Send a response back to the message author
     msg.channel_id.send_message(
         &ctx, 
         |m| {
@@ -48,8 +45,6 @@ pub async fn notify_delete(word: &str, ctx: &Context, msg: &Message) {
 // in the current channel with the current word
 // that is being used for notifications.
 pub async fn notify_show(ctx: &Context, msg: &Message, word: &str) {
-
-    // Send a response back to the message author
     msg.channel_id.send_message(
         &ctx, 
         |m| {

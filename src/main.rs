@@ -10,6 +10,7 @@ mod commands;
 #[path = "./cogs/handlers.rs"]
 mod handlers;
 
+// Main function
 #[tokio::main]
 async fn main() {
     // Initialize the command prefix and all 
