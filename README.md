@@ -9,6 +9,14 @@
 - Aside from my desire to learn the language, I decided that Rust would be the best option for this project as iterating over the sqlite database rows for every message sent in a channel can take quite some time. Lucky Rust is extremely fast which makes
 performing these iterations not as time consuming.
 
+# Quick Usage
+<h3>Running the bot</h3>
+
+```rust
+$ TOKEN="YOUR BOT TOKEN" DATABASE_URL="sqlite:database.sqlite" cargo run
+
+```
+
 # License
 MIT License
 
