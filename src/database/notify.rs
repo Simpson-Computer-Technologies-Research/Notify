@@ -1,4 +1,3 @@
-
 // The exists function is used to
 // determine whether the user_id+guild_id
 // already exist within a row in the database.
@@ -8,19 +7,17 @@
 async fn _exists(
     database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, user_id: &i64
 ) -> bool {
-
     // Establish new sqlx query
     let r = sqlx::query!(
         "SELECT word FROM notify WHERE guild_id=? AND user_id=?",
         guild_id,
         user_id,
-    )
+    ).fetch_one(database).await;
 
-    // Execute said sqlx query
-    .fetch_one(database)
-    .await;
-
-    // Get the word and check whether it's length is valid
+    // Check whether an error has occurred.
+    // for example: if the user_id+guild_id is
+    // not present in the database, a "row not found"
+    // error will appear, thus return false.
     return r.err().is_none();
 }
 
@@ -38,12 +35,7 @@ async fn _update(
         word,
         guild_id,
         user_id,
-    )
-
-    // Execute said sqlx query
-    .execute(database)
-    .await
-    .unwrap();
+    ).execute(database).await.unwrap();
 }
 
 // The insert function is used to insert the 
@@ -59,12 +51,7 @@ async fn _insert(
         guild_id,
         user_id,
         word,
-    )
-
-    // Execute said sqlx query
-    .execute(database)
-    .await
-    .unwrap();
+    ).execute(database).await.unwrap();
 }
 
 // The select_from_guild function is used to obtain all the
@@ -100,21 +87,16 @@ pub async fn select_from_guild(
 pub async fn select(
     database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, user_id: &i64
 ) -> String {
-
     // Establish new sqlx query
     let r = sqlx::query!(
         "SELECT word FROM notify WHERE guild_id=? AND user_id=?",
         guild_id,
         user_id,
-    )
-
-    // Execute said sqlx query
-    .fetch_one(database)
-    .await
-    .unwrap();
-
-    // Return the selection
-    return r.word;
+    ).fetch_one(database).await;
+    if r.err().is_none() {
+        return r.unwrap().word;
+    }
+    return "".to_string();
 }
 
 // The delete function is used to delete the row
@@ -130,12 +112,7 @@ pub async fn delete(
         "DELETE FROM notify WHERE guild_id=? and user_id=?",
         guild_id,
         user_id,
-    )
-
-    // Execute said sqlx query
-    .execute(database)
-    .await
-    .unwrap();
+    ).execute(database).await.unwrap();
 }
 
 // The set function is used to direct which
@@ -151,13 +128,10 @@ pub async fn set(
 ) {
     // Check whether the user_id and guild_id exist
     // in the database already.
-    println!("{}", _exists(database, guild_id, user_id).await);
     if _exists(database, guild_id, user_id).await {
-
         // If so, update the user_id+guild_id row with the new word
         _update(database, guild_id, user_id, word).await;
     } else {
-
         // Else, insert the user_id+guild_id+word into the db
         _insert(database, guild_id, user_id, word).await;
     }
