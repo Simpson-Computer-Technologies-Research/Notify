@@ -1,5 +1,6 @@
 use serenity::model::prelude::PrivateChannel;
 use serenity::model::channel::Message;
+use serenity::builder::CreateMessage;
 use serenity::model::Timestamp;
 use serenity::prelude::*;
 
@@ -8,8 +9,8 @@ use serenity::prelude::*;
 // them when a word in the current server is sent in
 // a message.
 pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
-    msg.channel_id.send_message(&ctx, |m| {
-        m.embed(|e| {e
+    msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
+        m.embed(|e: &mut serenity::builder::CreateEmbed| {e
             .title("Notifications")
             .description(
                 format!("{} set `{}` as their notifier", 
@@ -25,8 +26,8 @@ pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
 // The notify_delete function is used to remove
 // a word from the sqlite database.
 pub async fn notify_delete(ctx: &Context, msg: &Message) {
-    msg.channel_id.send_message(&ctx, |m| {
-        m.embed(|e| {e
+    msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
+        m.embed(|e: &mut serenity::builder::CreateEmbed| {e
             .title("Notifications")
             .description(
                 format!("{} removed their notifier", 
@@ -43,8 +44,8 @@ pub async fn notify_delete(ctx: &Context, msg: &Message) {
 // in the current channel with the current word
 // that is being used for notifications.
 pub async fn notify_show(ctx: &Context, msg: &Message, word: &str) {
-    msg.channel_id.send_message(&ctx, |m| {
-        m.embed(|e| {e
+    msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
+        m.embed(|e: &mut serenity::builder::CreateEmbed| {e
             .title("Notifications")
             .description(
                 format!("{}'s current notifier is: `{}`", 
@@ -69,8 +70,8 @@ pub async fn notify_help(ctx: &Context, msg: &Message) {
 
     // Send a reply to the command author
     // Send a response back to the message author
-    msg.channel_id.send_message(&ctx, |m| {
-        m.embed(|e| {
+    msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
+        m.embed(|e: &mut serenity::builder::CreateEmbed| {
             e.title("Notifications Support")
                 .description(description)
                 .timestamp(Timestamp::now())
@@ -88,8 +89,8 @@ pub async fn notify_alert(
     msg: &Message,
     word: &str
 ) {
-    dm.send_message(&ctx, |m| {
-        m.embed(|e| {e
+    dm.send_message(&ctx, |m: &mut CreateMessage| {
+        m.embed(|e: &mut serenity::builder::CreateEmbed| {e
             .title("Notifications")
             .description(
                 format!("{} sent `{}` in <#{}>", 

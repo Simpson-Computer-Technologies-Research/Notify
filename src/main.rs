@@ -15,12 +15,12 @@ mod handlers;
 async fn main() {
     // Initialize the command prefix and all 
     // its commands
-    let framework = StandardFramework::new()
+    let framework: StandardFramework = StandardFramework::new()
         .configure(|c| c.prefix("="))
         .group(&commands::GENERAL_GROUP);
 
     // Initialize the client handler object
-    let handler = handlers::Handler{
+    let handler: handlers::Handler = handlers::Handler{
         
         // Initialize a connection to the sqlite database
         database: sqlx::sqlite::SqlitePoolOptions::new()
@@ -44,7 +44,7 @@ async fn main() {
         | GatewayIntents::MESSAGE_CONTENT;
     
     // Build the discord client
-    let mut client = Client::builder(token, intents)
+    let mut client: Client = Client::builder(token, intents)
         .event_handler(handler)
         .framework(framework)
         .await
