@@ -1,5 +1,6 @@
 use serenity::model::prelude::PrivateChannel;
 use serenity::model::channel::Message;
+use serenity::model::Timestamp;
 use serenity::prelude::*;
 
 // The notify_set function is used to set
@@ -14,7 +15,7 @@ pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
                 format!("{} added `{}` to their guild notification pool", 
                     msg.author.mention(), word
             ))
-            .timestamp(serenity::model::Timestamp::now())
+            .timestamp(Timestamp::now())
             .color(3759815)
                 
         })}
@@ -31,7 +32,7 @@ pub async fn notify_delete(word: &str, ctx: &Context, msg: &Message) {
                 format!("{} removed `{}` from their guild notification pool", 
                     msg.author.mention(), word
             ))
-            .timestamp(serenity::model::Timestamp::now())
+            .timestamp(Timestamp::now())
             .color(3759815)
             
         })}
@@ -49,7 +50,7 @@ pub async fn notify_show(ctx: &Context, msg: &Message, word: &str) {
                 format!("{}'s current notifier is: `{}`", 
                     msg.author.mention(), word
             ))
-            .timestamp(serenity::model::Timestamp::now())
+            .timestamp(Timestamp::now())
             .color(3759815)
         })}
     ).await.unwrap();
@@ -72,7 +73,7 @@ pub async fn notify_help(ctx: &Context, msg: &Message) {
         m.embed(|e| {
             e.title("Notifications Support")
                 .description(description)
-                .timestamp(serenity::model::Timestamp::now())
+                .timestamp(Timestamp::now())
                 .color(3759815)
         })}
     ).await.unwrap();
@@ -94,7 +95,7 @@ pub async fn notify_alert(
                 format!("{} sent `{}` in <#{}>", 
                     msg.author.mention(), word, msg.channel_id
             ))
-            .timestamp(serenity::model::Timestamp::now())
+            .timestamp(Timestamp::now())
             .color(3759815)
             
         })}
