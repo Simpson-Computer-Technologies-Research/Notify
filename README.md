@@ -13,7 +13,7 @@ performing these iterations not as time consuming.
 <h3>Running the bot</h3>
 
 ```rust
-$ TOKEN="YOUR BOT TOKEN" DATABASE_URL="sqlite:database.sqlite" cargo run
+$ TOKEN="YOUR BOT TOKEN" DATABASE_URL="sqlite:database.sqlite" cargo run --release
 
 ```
 
