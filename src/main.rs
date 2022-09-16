@@ -1,6 +1,6 @@
-use std::env;
 use serenity::framework::StandardFramework;
 use serenity::prelude::*;
+use std::env;
 
 // Import commands
 #[path = "./cogs/commands.rs"]
@@ -34,7 +34,6 @@ async fn main() {
             .expect("Couldn't connect to database")
     };
     
-
     // Get the token from the .env file
     let token: String = env::var("TOKEN").expect("$TOKEN is not set");
     

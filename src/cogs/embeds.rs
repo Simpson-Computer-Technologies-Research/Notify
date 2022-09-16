@@ -1,43 +1,40 @@
-use serenity::prelude::*;
+use serenity::model::prelude::PrivateChannel;
 use serenity::model::channel::Message;
+use serenity::prelude::*;
 
 // The notify_set function is used to set
 // the word for the message author that notifies
 // them when a word in the current server is sent in
 // a message.
 pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
-    msg.channel_id.send_message(
-        &ctx, 
-        |m| {
-            m.embed(|e| {e
-                .title("Notifications")
-                .description(
-                    format!("{} added `{}` to their guild notification pool", 
-                        msg.author.mention(), word
-                ))
-                .timestamp(serenity::model::Timestamp::now())
-                .color(3759815)
-                 
-            })}
+    msg.channel_id.send_message(&ctx, |m| {
+        m.embed(|e| {e
+            .title("Notifications")
+            .description(
+                format!("{} added `{}` to their guild notification pool", 
+                    msg.author.mention(), word
+            ))
+            .timestamp(serenity::model::Timestamp::now())
+            .color(3759815)
+                
+        })}
     ).await.unwrap();
 }
 
 // The notify_delete function is used to remove
 // a word from the sqlite database.
 pub async fn notify_delete(word: &str, ctx: &Context, msg: &Message) {
-    msg.channel_id.send_message(
-        &ctx, 
-        |m| {
-            m.embed(|e| {e
-                .title("Notifications")
-                .description(
-                    format!("{} removed `{}` from their guild notification pool", 
-                        msg.author.mention(), word
-                ))
-                .timestamp(serenity::model::Timestamp::now())
-                .color(3759815)
-                
-            })}
+    msg.channel_id.send_message(&ctx, |m| {
+        m.embed(|e| {e
+            .title("Notifications")
+            .description(
+                format!("{} removed `{}` from their guild notification pool", 
+                    msg.author.mention(), word
+            ))
+            .timestamp(serenity::model::Timestamp::now())
+            .color(3759815)
+            
+        })}
     ).await.unwrap();
 }
 
@@ -45,19 +42,16 @@ pub async fn notify_delete(word: &str, ctx: &Context, msg: &Message) {
 // in the current channel with the current word
 // that is being used for notifications.
 pub async fn notify_show(ctx: &Context, msg: &Message, word: &str) {
-    msg.channel_id.send_message(
-        &ctx, 
-        |m| {
-            m.embed(|e| {e
-                .title("Notifications")
-                .description(
-                    format!("{}'s current notifier is: `{}`", 
-                        msg.author.mention(), word
-                ))
-                .timestamp(serenity::model::Timestamp::now())
-                .color(3759815)
-                
-            })}
+    msg.channel_id.send_message(&ctx, |m| {
+        m.embed(|e| {e
+            .title("Notifications")
+            .description(
+                format!("{}'s current notifier is: `{}`", 
+                    msg.author.mention(), word
+            ))
+            .timestamp(serenity::model::Timestamp::now())
+            .color(3759815)
+        })}
     ).await.unwrap();
 }
 
@@ -74,15 +68,13 @@ pub async fn notify_help(ctx: &Context, msg: &Message) {
 
     // Send a reply to the command author
     // Send a response back to the message author
-    msg.channel_id.send_message(
-        &ctx, 
-        |m| {
-            m.embed(|e| {
-                e.title("Notifications Support")
-                    .description(description)
-                    .timestamp(serenity::model::Timestamp::now())
-                    .color(3759815)
-            })}
+    msg.channel_id.send_message(&ctx, |m| {
+        m.embed(|e| {
+            e.title("Notifications Support")
+                .description(description)
+                .timestamp(serenity::model::Timestamp::now())
+                .color(3759815)
+        })}
     ).await.unwrap();
 }
 
@@ -91,22 +83,20 @@ pub async fn notify_help(ctx: &Context, msg: &Message) {
 // appearing in a message within the guild.
 pub async fn notify_alert(
     ctx: &Context, 
-    dm: &serenity::model::prelude::PrivateChannel,
+    dm: &PrivateChannel,
     msg: &Message,
     word: &str
 ) {
-    dm.send_message(
-        &ctx, 
-        |m| {
-            m.embed(|e| {e
-                .title("Notifications")
-                .description(
-                    format!("{} sent `{}` in <#{}>", 
-                        msg.author.mention(), word, msg.channel_id
-                ))
-                .timestamp(serenity::model::Timestamp::now())
-                .color(3759815)
-                
-            })}
+    dm.send_message(&ctx, |m| {
+        m.embed(|e| {e
+            .title("Notifications")
+            .description(
+                format!("{} sent `{}` in <#{}>", 
+                    msg.author.mention(), word, msg.channel_id
+            ))
+            .timestamp(serenity::model::Timestamp::now())
+            .color(3759815)
+            
+        })}
     ).await.unwrap();
 }

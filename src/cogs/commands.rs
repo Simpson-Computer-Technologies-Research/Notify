@@ -1,7 +1,7 @@
 use serenity::framework::standard::macros::{command, group};
 use serenity::framework::standard::{CommandResult};
-use serenity::prelude::*;
 use serenity::model::channel::Message;
+use serenity::prelude::*;
 
 // Initialize the commands
 // As a General group
