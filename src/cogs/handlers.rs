@@ -95,12 +95,12 @@ impl EventHandler for Handler {
 
         // Remove a word from the authors notification
         // database.
-        } else if let Some(word) = msg.content.strip_prefix("=notify del") {
+        } else if let Some(_) = msg.content.strip_prefix("=notify del") {
             // Delete the word from the database
             c_notify::delete(&self.database, &guild_id, &user_id).await;
 
             // Send the success embed
-            embeds::notify_delete(word.trim(), &ctx, &msg).await;
+            embeds::notify_delete(&ctx, &msg).await;
         
 
         // Send an embed that contains all the commands

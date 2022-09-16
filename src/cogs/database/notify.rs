@@ -87,6 +87,9 @@ pub async fn select(
 pub async fn delete(
     database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64, user_id: &i64
 ) {
+    // If the user_id+guild_id aren't in the database
+    if !_exists(database, guild_id, user_id).await { return; }
+
     // Establish new sqlx query
     sqlx::query!(
         "DELETE FROM notify WHERE guild_id=? and user_id=?",

@@ -12,7 +12,7 @@ pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
         m.embed(|e| {e
             .title("Notifications")
             .description(
-                format!("{} added `{}` to their guild notification pool", 
+                format!("{} set `{}` as their notifier", 
                     msg.author.mention(), word
             ))
             .timestamp(Timestamp::now())
@@ -24,13 +24,13 @@ pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
 
 // The notify_delete function is used to remove
 // a word from the sqlite database.
-pub async fn notify_delete(word: &str, ctx: &Context, msg: &Message) {
+pub async fn notify_delete(ctx: &Context, msg: &Message) {
     msg.channel_id.send_message(&ctx, |m| {
         m.embed(|e| {e
             .title("Notifications")
             .description(
-                format!("{} removed `{}` from their guild notification pool", 
-                    msg.author.mention(), word
+                format!("{} removed their notifier", 
+                    msg.author.mention()
             ))
             .timestamp(Timestamp::now())
             .color(3759815)
