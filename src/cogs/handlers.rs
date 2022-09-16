@@ -1,6 +1,5 @@
 use serenity::{prelude::*, model::prelude::UserId};
 mod embeds;
-
 // Import the notify database functions
 #[path = "../database/notify.rs"]
 mod db_notify;
@@ -27,17 +26,19 @@ async fn check_message_contents(
         guild_id,
     ).fetch_all(database).await.unwrap();
 
-    // For each row in the database
-    for _i in r {
-        if msg.content.contains(&_i.word) {
+    // Iterate over the selected rows
+    // Future iterators as MUCH faster than using
+    // a regular for loop.
+    futures::future::join_all(r.iter().map(|f| async {
+        if msg.content.contains(&f.word) {
             // Create a new private message with the
             // grabbed user id
-            let dm = UserId(_i.user_id as u64).create_dm_channel(&ctx.http).await;
+            let dm = UserId(f.user_id as u64).create_dm_channel(&ctx.http).await;
             
             // Send the alert embed
-            embeds::notify_alert(ctx, &dm.unwrap(), &msg, &_i.word).await;
+            embeds::notify_alert(ctx, &dm.unwrap(), &msg, &f.word).await;
         }
-    }
+    })).await;
 }
 
 // SQLite Database implementation as documented
