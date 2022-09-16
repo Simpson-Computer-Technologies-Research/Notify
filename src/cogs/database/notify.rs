@@ -54,30 +54,6 @@ async fn _insert(
     ).execute(database).await.unwrap();
 }
 
-// The select_from_guild function is used to obtain all the
-// words from the database using the provided guild+user_id
-/*
-pub async fn select_from_guild(
-    database: &sqlx::Pool<sqlx::Sqlite>, guild_id: &i64
-) -> Vec<Record> {
-    // Establish new sqlx query
-    let r: Vec<Record> = sqlx::query!(
-        "SELECT user_id, word FROM notify WHERE guild_id=?",
-        guild_id,
-    )
-
-    // Execute said sqlx query
-    .fetch_all(database)
-    .await
-    .unwrap();
-
-    // Iterate over the result
-    // and do i.word.unwrap();
-    // and do i.user_id.unwrap();
-    return r;
-}
-*/
-
 // The select function is used to select the word
 // from the database using the provided guild+user_id
 //

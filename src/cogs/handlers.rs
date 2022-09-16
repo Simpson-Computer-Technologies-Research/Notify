@@ -1,8 +1,9 @@
 use serenity::{prelude::*, model::prelude::UserId};
 mod embeds;
+
 // Import the notify database functions
-#[path = "../database/notify.rs"]
-mod db_notify;
+#[path = "./database/notify.rs"]
+mod c_notify;
 
 // Initialize the client handler
 pub struct Handler {
@@ -75,7 +76,7 @@ impl EventHandler for Handler {
             let word: &str = word.trim();
 
             // Update the database
-            db_notify::set(&self.database, &guild_id, &user_id, word).await;
+            c_notify::set(&self.database, &guild_id, &user_id, word).await;
 
             // Send the success embed
             embeds::notify_set(word.trim(), &ctx, &msg).await;
@@ -85,7 +86,7 @@ impl EventHandler for Handler {
         // all of the message authors notification words
         } else if let Some(_) = msg.content.strip_prefix("=notify show") {
             // Get the word from the database
-            let word: String = db_notify::select(
+            let word: String = c_notify::select(
                 &self.database, &guild_id, &user_id).await;
 
             // Send the embed that shows the users current word
@@ -96,7 +97,7 @@ impl EventHandler for Handler {
         // database.
         } else if let Some(word) = msg.content.strip_prefix("=notify del") {
             // Delete the word from the database
-            db_notify::delete(&self.database, &guild_id, &user_id).await;
+            c_notify::delete(&self.database, &guild_id, &user_id).await;
 
             // Send the success embed
             embeds::notify_delete(word.trim(), &ctx, &msg).await;
