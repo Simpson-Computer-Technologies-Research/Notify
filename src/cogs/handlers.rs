@@ -20,12 +20,13 @@ async fn check_message_contents(
     database: &sqlx::Pool<sqlx::Sqlite>, 
     guild_id: &i64,
 ) {
-    // iterate over all the users in the database
-    // where guild_id = provided guild_id
-    let r = sqlx::query!(
-        "SELECT user_id, word FROM notify WHERE guild_id=?",
-        guild_id,
-    ).fetch_all(database).await.unwrap();
+    // Query the database for all rows that have the guild_id
+    let r = match sqlx::query!(
+        "SELECT user_id, word FROM notify WHERE guild_id=?", guild_id,
+    ).fetch_all(database).await {
+        Ok(r) => r,
+        Err(_) => return
+    };
 
     // Iterate over the selected rows
     // Future iterators as MUCH faster than using
@@ -35,9 +36,10 @@ async fn check_message_contents(
             // Create a new private message with the
             // grabbed user id
             let dm = UserId(f.user_id as u64).create_dm_channel(&ctx.http).await;
-            
-            // Send the alert embed
-            embeds::notify_alert(ctx, &dm.unwrap(), &msg, &f.word).await;
+            if dm.is_ok() {
+                // Send the alert embed
+                embeds::notify_alert(ctx, &dm.unwrap(), &msg, &f.word).await;
+            }
         }
     })).await;
 }
@@ -57,7 +59,10 @@ impl EventHandler for Handler {
         if msg.is_private() { return; }
 
         // Define a new guild_id variable
-        let guild_id: i64 = msg.guild_id.unwrap().0 as i64;
+        let guild_id: i64 = match msg.guild_id {
+            Some(guild_id) => guild_id.0 as i64,
+            None => return
+        };
         // Define a new user_id variable
         let user_id: i64 = msg.author.id.0 as i64;
         
@@ -81,17 +86,16 @@ impl EventHandler for Handler {
             // Send the success embed
             embeds::notify_set(word.trim(), &ctx, &msg).await;
 
-
         // Send an embed that contains
         // all of the message authors notification words
         } else if let Some(_) = msg.content.strip_prefix("=notify show") {
             // Get the word from the database
-            let word: String = db_notify::select(
-                &self.database, &guild_id, &user_id).await;
-
+            let word: String = match db_notify::select(&self.database, &guild_id, &user_id).await {
+                Some(word) => word,
+                None => return
+            };
             // Send the embed that shows the users current word
             embeds::notify_show(&ctx, &msg, &word).await;
-
 
         // Remove a word from the authors notification
         // database.
@@ -102,7 +106,6 @@ impl EventHandler for Handler {
             // Send the success embed
             embeds::notify_delete(&ctx, &msg).await;
         
-
         // Send an embed that contains all the commands
         // for the =notify prefix.
         } else if let Some(_) = msg.content.strip_prefix("=notify help") {

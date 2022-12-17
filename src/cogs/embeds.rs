@@ -9,7 +9,7 @@ use serenity::prelude::*;
 // them when a word in the current server is sent in
 // a message.
 pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
-    msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
+    match msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
         m.embed(|e: &mut serenity::builder::CreateEmbed| {e
             .title("Notifications")
             .description(
@@ -20,13 +20,18 @@ pub async fn notify_set(word: &str, ctx: &Context, msg: &Message) {
             .color(3759815)
                 
         })}
-    ).await.unwrap();
+    ).await {
+        Ok(_) => {},
+        Err(e) => {
+            println!("Error sending message: {:?}", e);
+        }
+    }
 }
 
 // The notify_delete function is used to remove
 // a word from the sqlite database.
 pub async fn notify_delete(ctx: &Context, msg: &Message) {
-    msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
+    match msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
         m.embed(|e: &mut serenity::builder::CreateEmbed| {e
             .title("Notifications")
             .description(
@@ -37,14 +42,19 @@ pub async fn notify_delete(ctx: &Context, msg: &Message) {
             .color(3759815)
             
         })}
-    ).await.unwrap();
+    ).await {
+        Ok(_) => {},
+        Err(e) => {
+            println!("Error sending message: {:?}", e);
+        }
+    }
 }
 
 // The notify_show function is used to send a message
 // in the current channel with the current word
 // that is being used for notifications.
 pub async fn notify_show(ctx: &Context, msg: &Message, word: &str) {
-    msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
+    match msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
         m.embed(|e: &mut serenity::builder::CreateEmbed| {e
             .title("Notifications")
             .description(
@@ -54,7 +64,12 @@ pub async fn notify_show(ctx: &Context, msg: &Message, word: &str) {
             .timestamp(Timestamp::now())
             .color(3759815)
         })}
-    ).await.unwrap();
+    ).await {
+        Ok(_) => {},
+        Err(e) => {
+            println!("Error sending message: {:?}", e);
+        }
+    }
 }
 
 // The notify_help function is used to send 
@@ -70,14 +85,19 @@ pub async fn notify_help(ctx: &Context, msg: &Message) {
 
     // Send a reply to the command author
     // Send a response back to the message author
-    msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
+    match msg.channel_id.send_message(&ctx, |m: &mut CreateMessage| {
         m.embed(|e: &mut serenity::builder::CreateEmbed| {
             e.title("Notifications Support")
                 .description(description)
                 .timestamp(Timestamp::now())
                 .color(3759815)
         })}
-    ).await.unwrap();
+    ).await {
+        Ok(_) => {},
+        Err(e) => {
+            println!("Error sending message: {:?}", e);
+        }
+    }
 }
 
 // The notify_alert function is used to send a direct message
@@ -89,7 +109,7 @@ pub async fn notify_alert(
     msg: &Message,
     word: &str
 ) {
-    dm.send_message(&ctx, |m: &mut CreateMessage| {
+    match dm.send_message(&ctx, |m: &mut CreateMessage| {
         m.embed(|e: &mut serenity::builder::CreateEmbed| {e
             .title("Notifications")
             .description(
@@ -100,5 +120,10 @@ pub async fn notify_alert(
             .color(3759815)
             
         })}
-    ).await.unwrap();
+    ).await {
+        Ok(_) => {},
+        Err(e) => {
+            println!("Error sending message: {:?}", e);
+        }
+    }
 }

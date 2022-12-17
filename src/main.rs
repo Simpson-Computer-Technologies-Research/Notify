@@ -24,7 +24,7 @@ async fn main() {
         
         // Initialize a connection to the sqlite database
         database: sqlx::sqlite::SqlitePoolOptions::new()
-            .max_connections(5)
+            .max_connections(1)
             .connect_with(
                 sqlx::sqlite::SqliteConnectOptions::new()
                     .filename("database.sqlite")
