@@ -1,14 +1,9 @@
 use serenity::framework::StandardFramework;
 use serenity::prelude::*;
 use std::env;
-
-// Import commands
-#[path = "./cogs/commands.rs"]
 mod commands;
-
-// Import handlers
-#[path = "./cogs/handlers.rs"]
 mod handlers;
+mod embeds;
 
 // Main function
 #[tokio::main]
