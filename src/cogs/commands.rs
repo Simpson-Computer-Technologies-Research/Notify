@@ -1,5 +1,5 @@
 use serenity::framework::standard::macros::{command, group};
-use serenity::framework::standard::{CommandResult};
+use serenity::framework::standard::CommandResult;
 use serenity::model::channel::Message;
 use serenity::prelude::*;
 
