@@ -104,10 +104,7 @@ pub async fn notify_help(ctx: &Context, msg: &Message) {
 // to the user as a notification for their notify word
 // appearing in a message within the guild.
 pub async fn notify_alert(
-    ctx: &Context, 
-    dm: &PrivateChannel,
-    msg: &Message,
-    word: &str
+    ctx: &Context, dm: &PrivateChannel, msg: &Message, word: &str
 ) {
     match dm.send_message(&ctx, |m: &mut CreateMessage| {
         m.embed(|e: &mut serenity::builder::CreateEmbed| {e

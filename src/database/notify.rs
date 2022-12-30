@@ -1,5 +1,3 @@
-use sqlx::query;
-
 // The exists function is used to
 // determine whether the user_id+guild_id
 // already exist within a row in the database.
@@ -132,11 +130,14 @@ pub async fn set(
 ) {
     // Check whether the user_id and guild_id exist
     // in the database already.
-    if _exists(database, guild_id, user_id).await {
-        // If so, update the user_id+guild_id row with the new word
-        _update(database, guild_id, user_id, word).await;
-    } else {
-        // Else, insert the user_id+guild_id+word into the db
-        _insert(database, guild_id, user_id, word).await;
+    match _exists(database, guild_id, user_id).await {
+        true => {
+            // If so, update the user_id+guild_id row with the new word
+            _update(database, guild_id, user_id, word).await;
+        },
+        false => {
+            // Else, insert the user_id+guild_id+word into the db
+            _insert(database, guild_id, user_id, word).await;
+        }
     }
 }
