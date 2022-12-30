@@ -2,7 +2,7 @@ use serenity::{
     prelude::*,
     model::channel::Message,
     framework::standard::{
-        macros::{command, group}, CommandResult, Args
+        macros::{command, group}, CommandResult
     }
 };
 
