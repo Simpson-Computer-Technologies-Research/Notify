@@ -1,8 +1,12 @@
-use serenity::model::prelude::PrivateChannel;
-use serenity::model::channel::Message;
-use serenity::builder::CreateMessage;
-use serenity::model::Timestamp;
-use serenity::prelude::*;
+use serenity::{
+    builder::CreateMessage,
+    prelude::*,
+    model::{
+        Timestamp,
+        prelude::PrivateChannel,
+        channel::Message,
+    }
+};
 
 // The notify_set function is used to set
 // the word for the message author that notifies

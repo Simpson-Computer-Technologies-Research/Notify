@@ -1,4 +1,6 @@
-use serenity::{prelude::*, model::prelude::UserId};
+use serenity::{
+    prelude::*, model::prelude::UserId
+};
 use crate::embeds;
 
 // Import the notify database functions
