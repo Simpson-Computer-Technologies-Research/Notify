@@ -1,5 +1,5 @@
 # Notify ![Stars](https://img.shields.io/github/stars/realTristan/Notify?color=brightgreen) ![Watchers](https://img.shields.io/github/watchers/realTristan/Notify?label=Watchers)
-![banner](https://user-images.githubusercontent.com/75189508/190282954-aecd8cb4-d076-4132-8535-dee24221e689.png)
+![banner](https://github.com/realTristan/Notify/assets/75189508/027cc097-4caf-45b4-9924-0e0249925463)
 
 # About
 <h3>Why Rust?</h3>
@@ -7,7 +7,7 @@
 - This project was made for a person who messaged me about creating a discord bot for them. I wanted to learn Rust and I thought this would be a great project to do so.
 
 - Aside from my desire to learn the language, I decided that Rust would be the best option for this project as iterating over the sqlite database rows for every message sent in a channel can take quite some time. Luckily Rust is extremely fast which makes
-performing these iterations not as time consuming.
+performing these iterations is not as time-consuming.
 
 # Quick Usage
 <h3>Running the bot</h3>
