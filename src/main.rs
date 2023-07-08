@@ -4,6 +4,7 @@ use serenity::{
 mod commands;
 mod handlers;
 mod embeds;
+mod database;
 
 // Main function
 #[tokio::main]
