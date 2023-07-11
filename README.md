@@ -1,4 +1,4 @@
-# Notify ![Stars](https://img.shields.io/github/stars/realTristan/Notify?color=brightgreen) ![Watchers](https://img.shields.io/github/watchers/realTristan/Notify?label=Watchers)
+# Notify ![Stars](https://img.shields.io/github/stars/Simpson-Computer-Technologies-Research/Notify?color=brightgreen) ![Watchers](https://img.shields.io/github/watchers/Simpson-Computer-Technologies-Research/Notify?label=Watchers)
 ![banner](https://github.com/realTristan/Notify/assets/75189508/027cc097-4caf-45b4-9924-0e0249925463)
 
 # About
